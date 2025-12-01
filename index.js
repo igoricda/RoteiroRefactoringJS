@@ -9,8 +9,8 @@ function gerarFaturaStr (fatura, pecas) {
                             minimumFractionDigits: 2 }).format;
   
     for (let apre of fatura.apresentacoes) {
-      const peca = pecas[apre.id];
-	let total = calcularTotalApresentacao(apre, peca);
+      const peca = getPeca(apre);
+	let total = calcularTotalApresentacao(apre);
       // créditos para próximas contratações
       creditos += Math.max(apre.audiencia - 30, 0);
       if (peca.tipo === "comedia") 
@@ -25,8 +25,9 @@ function gerarFaturaStr (fatura, pecas) {
     return faturaStr;
   }
 
-    function calcularTotalApresentacao(apre, peca){
+    function calcularTotalApresentacao(apre){
       let total = 0;
+	const peca = getPeca(apre);
 
       switch (peca.tipo) {
       case "tragedia":
@@ -47,6 +48,11 @@ function gerarFaturaStr (fatura, pecas) {
       }
 	return total;
 	}
+function getPeca(apresentacao){
+	return pecas[apresentacao.id];
+}
+
+
 
 const faturas = JSON.parse(readFileSync('./faturas.json'));
 const pecas = JSON.parse(readFileSync('./pecas.json'));
